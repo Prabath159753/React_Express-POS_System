@@ -23,6 +23,72 @@ connection.connect(function(err){
 
 const router = express.Router()
 
+// get all item from db
+router.get('/',(req, res) =>{
+    var query = "SELECT * FROM items"
 
+    connection.query(query,(err,rows) =>{
+        if(err) throw err
+
+        res.send(rows)
+    })
+})
+
+// save item
+router.post('/',(req, res) =>{
+    const code = req.body.code
+    const name = req.body.name
+    const discription = req.body.discription
+    const price = req.body.price
+    const qtyOnHand = req.body.qtyOnHand
+
+    var query = "INSERT INTO items (code, name, discription, price, qtyOnHand) VALUES (?,?,?,?,?)"
+
+    connection.query(query, [code, name, discription, price, qtyOnHand], (err) =>{
+        if(err){
+            res.send({"message" : "duplicate entry"})
+        }else{
+            res.send({"message" : "Item Successfully Added!"})
+        }
+    })
+})
+
+// update item
+router.put('/',(req, res) =>{
+    const code = req.body.code
+    const name = req.body.name
+    const discription = req.body.discription
+    const price = req.body.price
+    const qtyOnHand = req.body.qtyOnHand
+
+    var query = "UPDATE items SET name=?, discription=?, price=?, qtyOnHand=? WHERE code=?"
+
+    connection.query(query, [name, discription, price, qtyOnHand, code], (err,rows) =>{
+        if(err) console.log(err);
+
+        if(rows.affectedRows > 0){
+            res.send({'message' : 'Item successfully Updated'})
+        }else{
+            res.send({'message' : 'Item not found'})
+        }
+    })
+})
+
+// delete item
+router.delete('/:code', (req, res) => {
+    const code = req.params.code
+
+    var query = "DELETE FROM items WHERE code=?";
+
+    connection.query(query, [code], (err, rows) => {
+        if (err) console.log(err);
+
+        if (rows.affectedRows > 0) {
+            res.send({ 'message': 'Item successfully deleted' })
+        } else {
+            res.send({ 'message': 'Item not found' })
+        }
+    })
+})
 
 module.exports = router
