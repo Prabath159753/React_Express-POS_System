@@ -4,7 +4,7 @@ const db = require('../configs/db/db.config')
 
 const connection = mysql.createConnection(db.database)
 
-// user connect to db
+// user connect to db and crate table in db
 connection.connect(function(err){
     if(err){
         console.log(err);
@@ -23,7 +23,7 @@ connection.connect(function(err){
 
 const router = express.Router()
 
-// get user
+// get all users from db
 router.get('/',(req, res) =>{
     var query = "SELECT * FROM users"
 

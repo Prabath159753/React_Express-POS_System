@@ -4,6 +4,7 @@ const db = require('../configs/db/db.config')
 
 const connection = mysql.createConnection(db.database)
 
+// customer connect to db and crate table in db
 connection.connect(function(err){
     if(err){
         console.log(err);
@@ -21,5 +22,71 @@ connection.connect(function(err){
 })
 
 const router = express.Router()
+
+// get all customer from db
+router.get('/',(req, res) =>{
+    var query = "SELECT * FROM customer"
+
+    connection.query(query,(err,rows) =>{
+        if(err) throw err
+
+        res.send(rows)
+    })
+})
+
+// save customer
+router.post('/',(req, res) =>{
+    const id = req.body.id
+    const name = req.body.name
+    const address = req.body.address
+    const salary = req.body.salary
+
+    var query = "INSERT INTO customer (id, name, address, salary) VALUES (?,?,?,?)"
+
+    connection.query(query, [id, name, address, salary], (err) =>{
+        if(err){
+            res.send({"message" : "duplicate entry"})
+        }else{
+            res.send({"message" : "Customer Successfully Added!"})
+        }
+    })
+})
+
+// update customer
+router.put('/',(req, res) =>{
+    const id = req.body.id
+    const name = req.body.name
+    const address = req.body.address
+    const salary = req.body.salary
+
+    var query = "UPDATE customer SET name=?, address=?, salary=? WHERE id=?"
+
+    connection.query(query, [name, address, salary, id], (err,rows) =>{
+        if(err) console.log(err);
+
+        if(rows.affectedRows > 0){
+            res.send({'message' : 'Customer Updated'})
+        }else{
+            res.send({'message' : 'Customer not found'})
+        }
+    })
+})
+
+// delete customer
+router.delete('/:id', (req, res) => {
+    const id = req.params.id
+
+    var query = "DELETE FROM customer WHERE id=?";
+
+    connection.query(query, [id], (err, rows) => {
+        if (err) console.log(err);
+
+        if (rows.affectedRows > 0) {
+            res.send({ 'message': 'Customer deleted' })
+        } else {
+            res.send({ 'message': 'Customer not found' })
+        }
+    })
+})
 
 module.exports = router
