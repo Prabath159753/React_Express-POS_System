@@ -45,7 +45,7 @@ router.post('/',(req, res) =>{
 
     connection.query(query, [orderId, itemCode, orderQty, price], (err) =>{
         if(err){
-            res.send({"message" : "duplicate entry. Please try again"})
+            res.send({"message" : "Duplicate entry. Please try again"})
         }else{
             res.send({"message" : "Order Detail Successfully Added!"})
         }
@@ -86,6 +86,19 @@ router.delete('/:orderId', (req, res) => {
         } else {
             res.send({ 'message': 'Order Detail not found. Please try again' })
         }
+    })
+})
+
+// get order details in table by order id
+router.get('/:orderId', (req, res) => {
+    const orderId = req.params.orderId
+
+    var query = "SELECT * FROM orderDetail WHERE orderId=?"
+
+    connection.query(query, [orderId], (err, rows) => {
+        if (err) console.log(err);
+
+        res.send(rows)
     })
 })
 
