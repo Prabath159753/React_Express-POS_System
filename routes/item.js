@@ -46,7 +46,7 @@ router.post('/',(req, res) =>{
 
     connection.query(query, [code, name, discription, price, qtyOnHand], (err) =>{
         if(err){
-            res.send({"message" : "duplicate entry"})
+            res.send({"message" : "Duplicate entry. Please try again"})
         }else{
             res.send({"message" : "Item Successfully Added!"})
         }
@@ -67,9 +67,9 @@ router.put('/',(req, res) =>{
         if(err) console.log(err);
 
         if(rows.affectedRows > 0){
-            res.send({'message' : 'Item successfully Updated'})
+            res.send({'message' : 'Item Successfully Updated'})
         }else{
-            res.send({'message' : 'Item not found'})
+            res.send({'message' : 'Item not found. Please try again'})
         }
     })
 })
@@ -84,10 +84,23 @@ router.delete('/:code', (req, res) => {
         if (err) console.log(err);
 
         if (rows.affectedRows > 0) {
-            res.send({ 'message': 'Item successfully deleted' })
+            res.send({ 'message': 'Item Successfully Deleted' })
         } else {
-            res.send({ 'message': 'Item not found' })
+            res.send({ 'message': 'Item not found. Please try again' })
         }
+    })
+})
+
+// get item in table by item id
+router.get('/:code', (req, res) => {
+    const code = req.params.code
+
+    var query = "SELECT * FROM items WHERE code=?"
+
+    connection.query(query, [code], (err, rows) => {
+        if (err) console.log(err);
+
+        res.send(rows)
     })
 })
 
