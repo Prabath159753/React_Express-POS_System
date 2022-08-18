@@ -45,7 +45,7 @@ router.post('/',(req, res) =>{
 
     connection.query(query, [id, name, address, salary], (err) =>{
         if(err){
-            res.send({"message" : "duplicate entry"})
+            res.send({"message" : "Duplicate entry. Please try again"})
         }else{
             res.send({"message" : "Customer Successfully Added!"})
         }
@@ -65,9 +65,9 @@ router.put('/',(req, res) =>{
         if(err) console.log(err);
 
         if(rows.affectedRows > 0){
-            res.send({'message' : 'Customer Updated'})
+            res.send({'message' : 'Customer Successfully Updated'})
         }else{
-            res.send({'message' : 'Customer not found'})
+            res.send({'message' : 'Customer not found. Please try again'})
         }
     })
 })
@@ -82,10 +82,23 @@ router.delete('/:id', (req, res) => {
         if (err) console.log(err);
 
         if (rows.affectedRows > 0) {
-            res.send({ 'message': 'Customer deleted' })
+            res.send({ 'message': 'Customer Successfully Deleted' })
         } else {
-            res.send({ 'message': 'Customer not found' })
+            res.send({ 'message': 'Customer not found. Please try again' })
         }
+    })
+})
+
+// get customer in table by id
+router.get('/:id', (req, res) => {
+    const id = req.params.id
+
+    var query = "SELECT * FROM customer WHERE id=?"
+
+    connection.query(query, [id], (err, rows) => {
+        if (err) console.log(err);
+
+        res.send(rows)
     })
 })
 
