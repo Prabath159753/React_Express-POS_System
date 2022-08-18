@@ -4,7 +4,7 @@ const db = require('../configs/db/db.config')
 
 const connection = mysql.createConnection(db.database)
 
-// user connect to db and crate table in db
+// user connect to db and create table in db
 connection.connect(function(err){
     if(err){
         console.log(err);

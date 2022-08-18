@@ -4,7 +4,7 @@ const db = require('../configs/db/db.config')
 
 const connection = mysql.createConnection(db.database)
 
-// item connect to db and crate table in db
+// order connect to db and create table in db
 connection.connect(function(err){
     if(err){
         console.log(err);
