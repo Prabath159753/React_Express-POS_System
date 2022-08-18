@@ -44,9 +44,9 @@ router.post('/',(req, res) =>{
 
     connection.query(query, [id, name, username], (err) =>{
         if(err){
-            res.send({"message" : "duplicate entry"})
+            res.send({"message" : "Duplicate Entry. Please try again"})
         }else{
-            res.send({"message" : "user created!"})
+            res.send({"message" : "User Created!"})
         }
     })
 })
@@ -63,9 +63,9 @@ router.put('/',(req, res) =>{
         if(err) console.log(err);
 
         if(rows.affectedRows > 0){
-            res.send({'message' : 'User Updated'})
+            res.send({'message' : 'User Successfully Updated'})
         }else{
-            res.send({'message' : 'User not found'})
+            res.send({'message' : 'User not found. Please try again'})
         }
 
     })
@@ -81,10 +81,23 @@ router.delete('/:id', (req, res) => {
         if (err) console.log(err);
 
         if (rows.affectedRows > 0) {
-            res.send({ 'message': 'user deleted' })
+            res.send({ 'message': 'User Successfully deleted' })
         } else {
-            res.send({ 'message': 'user not found' })
+            res.send({ 'message': 'User not found. Please try again' })
         }
+    })
+})
+
+// get user in table by id
+router.get('/:id', (req, res) => {
+    const id = req.params.id
+
+    var query = "SELECT * FROM users WHERE id=?"
+
+    connection.query(query, [id], (err, rows) => {
+        if (err) console.log(err);
+
+        res.send(rows)
     })
 })
 
