@@ -23,5 +23,70 @@ connection.connect(function(err){
 
 const router = express.Router()
 
+// get all order details from db
+router.get('/',(req, res) =>{
+    var query = "SELECT * FROM orderDetail"
+
+    connection.query(query,(err,rows) =>{
+        if(err) throw err
+
+        res.send(rows)
+    })
+})
+
+// save order details
+router.post('/',(req, res) =>{
+    const orderId = req.body.orderId
+    const itemCode = req.body.itemCode
+    const orderQty = req.body.orderQty
+    const price = req.body.price
+
+    var query = "INSERT INTO orderDetail (orderId, itemCode, orderQty, price) VALUES (?,?,?)"
+
+    connection.query(query, [orderId, itemCode, orderQty, price], (err) =>{
+        if(err){
+            res.send({"message" : "duplicate entry. Please try again"})
+        }else{
+            res.send({"message" : "Order Detail Successfully Added!"})
+        }
+    })
+})
+
+// update order details
+router.put('/',(req, res) =>{
+    const orderId = req.body.orderId
+    const itemCode = req.body.itemCode
+    const orderQty = req.body.orderQty
+    const price = req.body.price
+
+    var query = "UPDATE orderDetail SET itemCode=?, orderQty=?, price=? WHERE orderId=?"
+
+    connection.query(query, [itemCode, orderQty, price, orderId], (err,rows) =>{
+        if(err) console.log(err);
+
+        if(rows.affectedRows > 0){
+            res.send({'message' : 'Order Detail Successfully Updated'})
+        }else{
+            res.send({'message' : 'Order Detail not found. Please try again'})
+        }
+    })
+})
+
+// delete order details
+router.delete('/:orderId', (req, res) => {
+    const orderId = req.params.orderId
+
+    var query = "DELETE FROM orderDetail WHERE orderId=?";
+
+    connection.query(query, [orderId], (err, rows) => {
+        if (err) console.log(err);
+
+        if (rows.affectedRows > 0) {
+            res.send({ 'message': 'Order Detail Successfully Deleted' })
+        } else {
+            res.send({ 'message': 'Order Detail not found. Please try again' })
+        }
+    })
+})
 
 module.exports = router

@@ -4,7 +4,8 @@ const mongoose = require('mongoose')
 const user = require ('./routes/user')
 const customer = require('./routes/customer')
 const item = require('./routes/item')
-const order = require ('./routes/Order')
+const order = require ('./routes/order')
+const orderDetail = require ('./routes/orderDetails')
 
 const app = express()
 const port = 4000
@@ -14,7 +15,7 @@ app.use('/users',user)
 app.use('/customer', customer)
 app.use('/items',  item)
 app.use('/orders',order)
-
+app.use('/orderDetail',orderDetail)
 
 // app.get('/',(req,res) =>{
 //     console.log('get request coming!');
